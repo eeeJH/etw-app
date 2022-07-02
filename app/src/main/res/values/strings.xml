@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">etwapp</string>
+    <string name="app_name">ETW APP</string>
+    <string name="app_full_name">EveryThing WorldCup</string>
 </resources>

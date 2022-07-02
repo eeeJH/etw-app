@@ -1,4 +1,4 @@
-package com.toy.etwapp.ui.main
+package com.toy.etwapp.ui.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 

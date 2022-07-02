@@ -2,7 +2,8 @@ package com.toy.etwapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.toy.etwapp.ui.main.MainFragment
+import com.toy.etwapp.R
+import com.toy.etwapp.ui.main.fragment.MainFragment
 
 class MainActivity : AppCompatActivity() {
 

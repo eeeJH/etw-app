@@ -1,4 +1,4 @@
-package com.toy.etwapp.ui.main
+package com.toy.etwapp.ui.main.fragment
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.toy.etwapp.R
+import com.toy.etwapp.ui.main.viewmodel.MainViewModel
 
 class MainFragment : Fragment() {
 
