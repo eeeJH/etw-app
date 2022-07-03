@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">ETW APP</string>
     <string name="app_full_name">EveryThing WorldCup</string>
+    <string name="main_body_close">종료</string>
+    <string name="title_activity_end">EndActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="tothehome">처음으로</string>
+    <string name="main_setting">설정</string>
 </resources>
