@@ -19,7 +19,7 @@
             android:id="@+id/contents_header_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello" />
+            android:text="info" />
 
     </LinearLayout>
 
@@ -28,16 +28,19 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:weightSum="1"
         app:layout_constraintBottom_toTopOf="@id/contents_footer_container"
         app:layout_constraintTop_toBottomOf="@id/contents_header_container">
 
         <ImageView
             android:id="@+id/contents_img1"
+            android:layout_weight="0.5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <ImageView
             android:id="@+id/contents_img2"
+            android:layout_weight="0.5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -55,7 +58,7 @@
             android:id="@+id/contents_footer_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello" />
+            android:text="info" />
 
     </LinearLayout>
 
