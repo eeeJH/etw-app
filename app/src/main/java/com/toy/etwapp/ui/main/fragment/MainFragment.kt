@@ -15,6 +15,7 @@ import android.widget.Toast
 import com.toy.etwapp.R
 import com.toy.etwapp.databinding.FragmentMainBinding
 import com.toy.etwapp.ui.main.activity.ContentsActivity
+import com.toy.etwapp.ui.main.viewmodel.ContentsViewModel
 import com.toy.etwapp.ui.main.viewmodel.MainViewModel
 
 class MainFragment : Fragment(), View.OnClickListener {
@@ -25,7 +26,6 @@ class MainFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private lateinit var binding: FragmentMainBinding
     private lateinit var viewModel: MainViewModel
 
     override fun onCreateView(
@@ -47,6 +47,7 @@ class MainFragment : Fragment(), View.OnClickListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        // TODO: Use the ViewModel
     }
 
     override fun onClick(v: View) {
