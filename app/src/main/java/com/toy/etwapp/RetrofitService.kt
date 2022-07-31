@@ -7,6 +7,6 @@ import retrofit2.http.*
 
 interface RetrofitService {
     //GET 예제
-    @GET("/api/food")
-    fun getFood(): Call<Response.Food>
+    @GET("/api/food/16")
+    fun getFood(): Call<Response.Res>
 }

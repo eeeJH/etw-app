@@ -3,17 +3,26 @@ package com.toy.etwapp.dto
 import com.google.gson.annotations.SerializedName
 
 class Response {
-    data class Food (
-        @SerializedName("userId")
+
+    data class Res (
+
+        @SerializedName("code")
+        var code: Int,
+
+        @SerializedName("message")
+        var message: String,
+
+        @SerializedName("data")
+        var data: List<Food>
+    )
+
+    class Food (
         val userId: Long,
 
-        @SerializedName("name")
         val name: String,
 
-        @SerializedName("pickCount")
         val pickCount: Long,
 
-        @SerializedName("imgPath")
         val imgPath: String
     )
 }

@@ -7,6 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.fragment.ContentsFragment">
 
+    <data>
+        <variable
+            name="ContentsViewModel"
+            type="org.three.sampleviewmodel.MainViewModel" />
+
+    </data>
+
     <LinearLayout
         android:id="@+id/contents_header_container"
         android:layout_width="match_parent"

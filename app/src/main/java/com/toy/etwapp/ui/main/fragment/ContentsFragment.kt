@@ -7,13 +7,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.graphics.green
+import androidx.databinding.DataBindingUtil
+import com.bumptech.glide.Glide
 import com.toy.etwapp.R
-import com.toy.etwapp.Retrofit
-import com.toy.etwapp.RetrofitService
+import com.toy.etwapp.databinding.FragmentContentsBinding
 import com.toy.etwapp.ui.main.viewmodel.ContentsViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class ContentsFragment : Fragment() {
 
@@ -22,12 +23,21 @@ class ContentsFragment : Fragment() {
     }
 
     private lateinit var viewModel: ContentsViewModel
+    private lateinit var vv: View
+    private var _binding: FragmentContentsBinding? = null
+
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_contents, container, false)
+        val binding = FragmentContentsBinding.inflate(inflater, container, false)
+
+        val v = inflater.inflate(R.layout.fragment_contents, container, false)
+        vv = v
+
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -35,22 +45,23 @@ class ContentsFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ContentsViewModel::class.java)
         // TODO: Use the ViewModel
 
-        var retrofit = Retrofit.retrofit
-        var service = retrofit.create(RetrofitService::class.java)
+        var img1: ImageView = vv.findViewById(R.id.contents_img1)
+        var img2: ImageView = vv.findViewById(R.id.contents_img2)
 
-        service.getFood().enqueue(object : Callback<com.toy.etwapp.dto.Response.Food> {
-                override fun onResponse(call: Call<com.toy.etwapp.dto.Response.Food>, response: Response<com.toy.etwapp.dto.Response.Food>) {
-                    Log.d("log",response.toString())
-                    Log.d("log", response.body().toString())
-                }
+        /*
+        Glide.with(vv)
+            .load("http://192.168.0.11:8080" + response.body()!!.data.get(0).imgPath.toString())
+            .into(img1)
 
-                override fun onFailure(call: Call<com.toy.etwapp.dto.Response.Food>, t: Throwable) {
-                    // 실패
-                    Log.d("log",t.message.toString())
-                    Log.d("log","fail")
-                }
-            })
+        Glide.with(vv)
+            .load("http://192.168.0.11:8080" + response.body()!!.data.get(1).imgPath.toString())
+            .into(img2)
+        */
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }
