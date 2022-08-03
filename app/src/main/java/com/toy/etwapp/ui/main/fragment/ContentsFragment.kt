@@ -14,9 +14,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.graphics.green
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.toy.etwapp.R
 import com.toy.etwapp.databinding.FragmentContentsBinding
+import com.toy.etwapp.dto.Response
 import com.toy.etwapp.ui.main.activity.ContentsActivity
 import com.toy.etwapp.ui.main.viewmodel.ContentsViewModel
 
@@ -28,9 +32,15 @@ class ContentsFragment : Fragment(), View.OnClickListener {
 
     private lateinit var viewModel: ContentsViewModel
     private lateinit var vv: View
-    private var _binding: FragmentContentsBinding? = null
 
+
+    private var idx: Int = 0
+
+    private var _binding: FragmentContentsBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var img1: ImageView
+    private lateinit var img2: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,46 +48,55 @@ class ContentsFragment : Fragment(), View.OnClickListener {
     ): View? {
         val binding = FragmentContentsBinding.inflate(inflater, container, false)
         val v = inflater.inflate(R.layout.fragment_contents, container, false)
-        var img1: ImageView = vv.findViewById(R.id.contents_img1)
-        var img2: ImageView = vv.findViewById(R.id.contents_img2)
-
         vv = v
+        img1 = v.findViewById(R.id.contents_img1)
+        img2 = v.findViewById(R.id.contents_img2)
+
+        viewModel = ViewModelProvider(this).get(ContentsViewModel::class.java)
+
+        viewModel.foodIdx.observe(this.viewLifecycleOwner, Observer {
+
+            Glide.with(v)
+                .load("http://192.168.0.11:8080" + viewModel.getFoodData(it).imgPath)
+                .into(img1)
+
+            Glide.with(v)
+                .load("http://192.168.0.11:8080" + viewModel.getFoodData(it + 1).imgPath)
+                .into(img2)
+
+        })
 
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ContentsViewModel::class.java)
-        // TODO: Use the ViewModel
 
+        //viewModel.api()
 
-
-        /*
-        Glide.with(vv)
-            .load("http://192.168.0.11:8080" + response.body()!!.data.get(0).imgPath.toString())
-            .into(img1)
-
-        Glide.with(vv)
-            .load("http://192.168.0.11:8080" + response.body()!!.data.get(1).imgPath.toString())
-            .into(img2)
-        */
+        //setView()
     }
 
     override fun onClick(v: View?) {
         when (vv.id) {
             R.id.contents_img1 -> {
-                Toast.makeText(context,"Select !", Toast.LENGTH_LONG).show()
-
+                viewModel.imgClick(idx)
             }
             R.id.contents_img2 -> {
-
+                viewModel.imgClick(idx + 1)
             }
         }
     }
 
-    fun changeView(){
-        
+    private fun setView(){
+
+        Glide.with(vv)
+            .load("http://192.168.0.11:8080" + viewModel.getFoodData(idx).imgPath)
+            .into(img1)
+
+        Glide.with(vv)
+            .load("http://192.168.0.11:8080" + viewModel.getFoodData(idx + 1).imgPath)
+            .into(img2)
     }
 
     override fun onDestroy() {
