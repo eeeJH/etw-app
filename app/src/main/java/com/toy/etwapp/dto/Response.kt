@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 class Response {
 
-    data class Res (
+    data class Res(
 
         @SerializedName("code")
         var code: Int,
@@ -16,7 +16,7 @@ class Response {
         var data: List<Food>
     )
 
-    class Food (
+    class Food(
         val userId: Long,
 
         val name: String,

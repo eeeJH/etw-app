@@ -47,7 +47,6 @@ class MainFragment : Fragment(), View.OnClickListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
     override fun onClick(v: View) {
@@ -55,13 +54,29 @@ class MainFragment : Fragment(), View.OnClickListener {
             R.id.main_body_16contents -> {
                 Toast.makeText(context,"Go to 16", Toast.LENGTH_LONG).show()
                 activity?.let{
-                    val intent = Intent(context, ContentsActivity::class.java)
-                    startActivity(intent)
+                    //val intent = Intent(context, ContentsActivity::class.java)
+
+                    val intent = Intent(context, ContentsActivity::class.java); //인텐트객체 선언
+                    intent.apply {
+                        this.putExtra("key",16); //값 전달
+                    }
+                    startActivity(intent); //액티비티 전환
                 }
             }
             R.id.main_body_32contents -> {
+                Toast.makeText(context,"Go to 32", Toast.LENGTH_LONG).show()
+                activity?.let{
+                    //val intent = Intent(context, ContentsActivity::class.java)
+
+                    val intent = Intent(context, ContentsActivity::class.java); //인텐트객체 선언
+                    intent.apply {
+                        this.putExtra("key",32); //값 전달
+                    }
+                    startActivity(intent); //액티비티 전환
+                }
             }
             R.id.main_body_close -> {
+                // 종료
             }
         }
     }
