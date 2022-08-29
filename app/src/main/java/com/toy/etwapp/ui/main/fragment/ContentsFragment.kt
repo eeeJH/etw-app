@@ -21,7 +21,6 @@ import com.toy.etwapp.ui.main.activity.EndActivity
 import com.toy.etwapp.ui.main.viewmodel.ContentsViewModel
 import java.time.LocalDate
 
-
 class ContentsFragment : Fragment(), View.OnClickListener {
 
     companion object {
@@ -50,15 +49,10 @@ class ContentsFragment : Fragment(), View.OnClickListener {
         val v = inflater.inflate(R.layout.fragment_contents, container, false)
 
         vv = v
-        Log.d("vv", vv.toString())
-        Log.d("v", v.toString())
         //contentCnt = arguments?.getInt("key", 0)!!
 
         img1 = v.findViewById(R.id.contents_img1)
         img2 = v.findViewById(R.id.contents_img2)
-
-        Log.d("img1", img1.toString())
-        Log.d("img2", img2.toString())
 
         img1.setOnClickListener(this)
         img2.setOnClickListener(this)
@@ -72,15 +66,15 @@ class ContentsFragment : Fragment(), View.OnClickListener {
 
         viewModel.ffoodArr.observe(this.viewLifecycleOwner, Observer {
 
-            Log.d("observe", "setting")
+            Log.d("observe", "ffoodArr setting")
             if (it.size > 0) {
                 Glide.with(vv.context)
                     .load("http://192.168.0.11:8080" + it[0].imgPath)
                     .into(v.findViewById(R.id.contents_img1))
 
                 img1_text.text = it[0].name
-                Log.d("img1_text.text", it[0].imgPath)
-                Log.d("img1_text.text", it[0].name)
+                Log.d("ffoodArr img1_text", it[0].imgPath)
+                Log.d("ffoodArr img1_text", it[0].name)
 
 
                 Glide.with(v.context)
@@ -88,8 +82,8 @@ class ContentsFragment : Fragment(), View.OnClickListener {
                     .into(img2)
 
                 img2_text.text = it[1].name
-                Log.d("img2_text.text", it[1].imgPath)
-                Log.d("img2_text.text", it[1].name)
+                Log.d("ffoodArr img2_text", it[1].imgPath)
+                Log.d("ffoodArr img2_text", it[1].name)
             }
         })
 
@@ -102,8 +96,10 @@ class ContentsFragment : Fragment(), View.OnClickListener {
         viewModel.foodIdx.observe(this.viewLifecycleOwner, Observer{
 
             Log.d("observe", "onActivityCreated setting")
-            Log.d("observe", it.toString())
-            if (it >= 0) {
+            if (it >= 0 && it != viewModel.tonamentLen) {
+                idx = it
+                Log.d("observe", it.toString())
+
                 Glide.with(vv.context)
                     .load("http://192.168.0.11:8080" + viewModel.getFoodData(it).imgPath)
                     .into(vv.findViewById(R.id.contents_img1))
@@ -126,24 +122,24 @@ class ContentsFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.contents_img1 -> {
-                Toast.makeText(v.context, "1", Toast.LENGTH_SHORT).show()
-                Log.d("contents_img1","contents_img1")
-                viewModel.setSelectedFood(idx)
                 viewModel.imgClick(idx)
             }
             R.id.contents_img2 -> {
-                Toast.makeText(v.context, "2", Toast.LENGTH_SHORT).show()
-                Log.d("contents_img2","contents_img2")
-                viewModel.setSelectedFood(idx + 1)
                 viewModel.imgClick(idx + 1)
             }
         }
 
         if(viewModel.isDone){
+            Log.d("onClick", "viewModel.isDone")
+
             activity?.let{
-                val intent = Intent(context, EndActivity::class.java); //인텐트객체 선언
+                val intent = Intent(requireContext(), EndActivity::class.java)
+                startActivity(intent)
+                requireActivity().overridePendingTransition(0, 0)
+
+                //val intent = Intent(activity, EndActivity::class.java); //인텐트객체 선언
                 intent.apply {
-                    this.putExtra("food",16); //값 전달
+                    this.putExtra("food",viewModel.winner.name); //값 전달
                 }
                 startActivity(intent); //액티비티 전환
             }
@@ -154,6 +150,4 @@ class ContentsFragment : Fragment(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
     }
-
 }
-

@@ -1,25 +1,19 @@
 package com.toy.etwapp.ui.main.viewmodel
 
-import android.content.Context
 import android.util.Log
-import android.util.Size
-import android.view.View
-import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bumptech.glide.Glide
-import com.toy.etwapp.R
 import com.toy.etwapp.Retrofit
 import com.toy.etwapp.RetrofitService
+import com.toy.etwapp.dto.Request
 import com.toy.etwapp.dto.Response
 import retrofit2.Call
 import retrofit2.Callback
 
-
 /*
 enum class ActionType{
-    FIRST_IMGVIEW, SECOND_IMGVIEW
+FIRST_IMGVIEW, SECOND_IMGVIEW
 }
 */
 
@@ -34,7 +28,8 @@ class ContentsViewModel(private val contentCnt: Int) : ViewModel() {
     // 라이브 데이터 - 값 변동 안됨
     // Food 데이터
     // Food 객체 초기화
-    private val arr = mutableListOf<Response.Food>()
+    private var arr = mutableListOf<Response.Food>()
+    private var tempArr = mutableListOf<Response.Food>()
     // 서버에서 실제로 받는 Food 객체
     lateinit var foodArr: List<Response.Food>
     private val _foodArr = MutableLiveData<List<Response.Food>>()
@@ -50,8 +45,8 @@ class ContentsViewModel(private val contentCnt: Int) : ViewModel() {
     var isDone: Boolean = false
 
     // 토너먼트 관련 객체들
-    lateinit var isSelectFood: Array<Boolean?>
     var tonamentLen: Int = 0;
+    lateinit var winner: Response.Food
 
     // 뷰모델 초기화
     init {
@@ -70,14 +65,9 @@ class ContentsViewModel(private val contentCnt: Int) : ViewModel() {
                 response: retrofit2.Response<Response.Res>
             ) {
                 Log.d("onResponse", response.body().toString())
-                Log.d("onResponse", response.body()!!.data.size.toString())
-
                 foodArr = response.body()!!.data
-                isSelectFood = Array(foodArr.size){false}
                 tonamentLen = foodArr.size
                 _foodIdx.value = 0
-
-                Log.d("request", "11111111111111 " + foodArr[0].name)
 
                 if (foodArr.isEmpty()) {
                     Log.d("onResponse Error", "fail")
@@ -102,63 +92,87 @@ class ContentsViewModel(private val contentCnt: Int) : ViewModel() {
 
     }
 
+    // ImageView 클릭시
+    // API
     fun imgClick(idx: Int) {
-        Log.d("imgClick", "imgClickimgClick")
-        // 선택 api 발사
+        Log.d("imgClick", "imgClick _foodIdx.value :  " + _foodIdx.value)
 
+        // 선택 api 발사
+        // Food id 보내기
+        val req = Request.Req(
+            foodArr[idx].userId
+        )
 
         // 다음 Index 설정
         // 마지막 index 확인
         // Size - 1 = _foodIndex 이면 마지막 선택 단계이므로 _foodArr 재설정
-        if (_foodIdx.value == tonamentLen - 1) {
+        // 16강이면 0 ~ 15
+        // _foodIdx.value = 14일 때 아래 로직
+        if (_foodIdx.value == tonamentLen - 2) {
             Log.d("imgClick", "1 _foodIdx.value " + _foodIdx.value)
-
+            // 마지막 선택 호출
+            setSelectedFood(idx)
             // 다음 단계 확인
-
 
             // 결승전이 아니면 다음 단계 사이즈로 재시작
             // 결승전이면 최종 승리자 화면 이동
-            if(arr.size != 2) {
+            if(tonamentLen != 2) {
                 Log.d("imgClick", "2 arr.size " + arr.size)
 
+                // 선택받은 Food들 다음 Step을 위해 arr로 옮기기
+                arr.clear()
+                arr.addAll(tempArr)
 
-                _foodArr.value = arr
+                foodArr = tempArr.toList()
+
+                Log.d("foodArr", foodArr.toString())
+
+                tempArr.clear()
+                // _foodArr 로 옮기기
+                _foodArr.value = foodArr
+                Log.d("imgClick", "2 _foodArr.value = arr :  arr.size " + arr.size)
+
+                Log.d("arr", arr.toString())
+
                 // 다음 선택 단계 : 초기화
-                isSelectFood = Array(foodArr.size){false}
                 _foodIdx.value = 0
                 tonamentLen /= 2
             }
             else {
-                Log.d("imgClick", "3")
+                Log.d("imgClick", "결승전")
 
-                // 메인 화면 호출 해라고 알려줌
+                winner = foodArr[idx]
+                // 마지막 화면 호출 해라
                 isDone = true
             }
 
         } else {
             Log.d("imgClick", "4")
 
+            setSelectedFood(idx)
             _foodIdx.value = _foodIdx.value?.plus(2)
         }
     }
 
     fun setSelectedFood(idx: Int){
         Log.d("setSelectedFood", "setSelectedFood : " + foodArr[idx].name)
-        isSelectFood[idx] = true
-        arr.add(foodArr[idx])
+        tempArr.add(foodArr[idx])
+        Log.d("setSelectedFood", "tempArr.size : " + tempArr.size)
     }
 
     fun getFoodData(idx: Int): Response.Food {
+        /*
         if(arr.isEmpty()){
-            Log.d("getFoodData", "foodArr !!!")
+            Log.d("getFoodData", "foodArr !!!" + idx)
             return foodArr[idx]
         }
         else{
-            Log.d("getFoodData", "arr !!!")
+            Log.d("getFoodData", "arr !!!" + idx)
             //return arr[idx]
-            return foodArr[idx]
+            return arr[idx]
 
         }
+        */
+        return foodArr[idx]
     }
-
 }

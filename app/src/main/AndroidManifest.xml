@@ -27,10 +27,8 @@
 
         <activity
             android:name=".ui.main.activity.EndActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false"
-            android:label="@string/title_activity_end"
-            android:theme="@style/Theme.Etwapp.Fullscreen" />
+            android:exported="true"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
