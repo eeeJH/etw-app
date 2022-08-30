@@ -10,6 +10,7 @@ import com.toy.etwapp.dto.Request
 import com.toy.etwapp.dto.Response
 import retrofit2.Call
 import retrofit2.Callback
+import java.net.URI
 
 /*
 enum class ActionType{
@@ -97,11 +98,6 @@ class ContentsViewModel(private val contentCnt: Int) : ViewModel() {
     fun imgClick(idx: Int) {
         Log.d("imgClick", "imgClick _foodIdx.value :  " + _foodIdx.value)
 
-        // 선택 api 발사
-        // Food id 보내기
-        val req = Request.Req(
-            foodArr[idx].userId
-        )
 
         // 다음 Index 설정
         // 마지막 index 확인
@@ -126,6 +122,7 @@ class ContentsViewModel(private val contentCnt: Int) : ViewModel() {
                 foodArr = tempArr.toList()
 
                 Log.d("foodArr", foodArr.toString())
+                tonamentLen /= 2
 
                 tempArr.clear()
                 // _foodArr 로 옮기기
@@ -136,7 +133,6 @@ class ContentsViewModel(private val contentCnt: Int) : ViewModel() {
 
                 // 다음 선택 단계 : 초기화
                 _foodIdx.value = 0
-                tonamentLen /= 2
             }
             else {
                 Log.d("imgClick", "결승전")
@@ -158,6 +154,24 @@ class ContentsViewModel(private val contentCnt: Int) : ViewModel() {
         Log.d("setSelectedFood", "setSelectedFood : " + foodArr[idx].name)
         tempArr.add(foodArr[idx])
         Log.d("setSelectedFood", "tempArr.size : " + tempArr.size)
+
+        // 선택 api 발사
+        // Food id 보내기
+        service.sendId(foodArr[idx].userId).enqueue(object : Callback<Request.Req> {
+            override fun onFailure(call: Call<Request.Req>, t: Throwable) {
+
+            }
+
+            override fun onResponse(
+                call: Call<Request.Req>,
+                response: retrofit2.Response<Request.Req>
+            ) {
+                if (response.isSuccessful) {
+                    val data = response.body()
+                    Log.d("post", "data : " + data)
+                }
+            }
+        })
     }
 
     fun getFoodData(idx: Int): Response.Food {

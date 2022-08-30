@@ -38,6 +38,7 @@ class ContentsFragment : Fragment(), View.OnClickListener {
     private lateinit var img2: ImageView
     private lateinit var img1_text: TextView
     private lateinit var img2_text: TextView
+    private lateinit var tonanment: TextView
 
     private var contentCnt: Int = 0
 
@@ -59,6 +60,7 @@ class ContentsFragment : Fragment(), View.OnClickListener {
 
         img1_text = v.findViewById(R.id.contents_img1_text)
         img2_text = v.findViewById(R.id.contents_img2_text)
+        tonanment = v.findViewById(R.id.tonanment)
 
         // ViewModel(몇강)
         viewModelFactory = ContentsViewModelFactory(contentCnt)
@@ -68,6 +70,8 @@ class ContentsFragment : Fragment(), View.OnClickListener {
 
             Log.d("observe", "ffoodArr setting")
             if (it.size > 0) {
+
+
                 Glide.with(vv.context)
                     .load("http://192.168.0.11:8080" + it[0].imgPath)
                     .into(v.findViewById(R.id.contents_img1))
@@ -94,6 +98,8 @@ class ContentsFragment : Fragment(), View.OnClickListener {
         super.onActivityCreated(savedInstanceState)
 
         viewModel.foodIdx.observe(this.viewLifecycleOwner, Observer{
+
+            tonanment.text = viewModel.tonamentLen.toString()
 
             Log.d("observe", "onActivityCreated setting")
             if (it >= 0 && it != viewModel.tonamentLen) {
@@ -134,14 +140,15 @@ class ContentsFragment : Fragment(), View.OnClickListener {
 
             activity?.let{
                 val intent = Intent(requireContext(), EndActivity::class.java)
-                startActivity(intent)
-                requireActivity().overridePendingTransition(0, 0)
 
                 //val intent = Intent(activity, EndActivity::class.java); //인텐트객체 선언
                 intent.apply {
-                    this.putExtra("food",viewModel.winner.name); //값 전달
+                    this.putExtra("foodName",viewModel.winner.name); //값 전달
+                    this.putExtra("foodImg",viewModel.winner.imgPath); //값 전달
                 }
-                startActivity(intent); //액티비티 전환
+
+                startActivity(intent)
+                requireActivity().overridePendingTransition(0, 0)
             }
         }
 
